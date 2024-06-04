@@ -1,10 +1,13 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { Menu, Sun, Moon, LaptopMinimal } from 'lucide-react';
+import { Menu, Sun, Moon, LaptopMinimal, LogOut } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContextProvider';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@clerk/clerk-react';
 
 const MobileNavMenu = () => {
     const { theme, setTheme } = useTheme()
+    const { isSignedIn } = useAuth()
+    const { signOut } = useAuth()
 
     return (
         <DropdownMenu>
@@ -14,12 +17,22 @@ const MobileNavMenu = () => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[10rem] mx-2">
-                <DropdownMenuItem>
-                    Sign in
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                    Log in
-                </DropdownMenuItem>
+                {isSignedIn ?
+                    <>
+                        <DropdownMenuItem onClick={() => signOut()} className="flex items-center justify-between">
+                            Sign out
+                            <LogOut className='size-4'/>
+                        </DropdownMenuItem>
+                    </> :
+                    <>
+                        <DropdownMenuItem>
+                            Sign in
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Log in
+                        </DropdownMenuItem>
+                    </>
+                }
                 <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
                         {theme === 'light' ? <Sun className='size-4 mr-2' /> : <Moon className='size-4 mr-2' />}
